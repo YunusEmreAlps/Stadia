@@ -1,0 +1,19 @@
+# Stadia Backend Configuration
+# Copy this file to config.yaml and adjust values as needed
+
+# ---------------------------------------------------------------------
+# Application
+# ---------------------------------------------------------------------
+app:
+  mode: debug
+  port: "8000"
+  version: "1.0.0"
+  name: "stadia-backend"
+
+# ---------------------------------------------------------------------
+# Database
+# ---------------------------------------------------------------------
+db:
+  # Database connection URL (optional - not currently used)
+  # Example: "postgresql://user:password@localhost:5432/stadia"
+  url: ""

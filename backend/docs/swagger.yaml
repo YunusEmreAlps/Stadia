@@ -1,0 +1,316 @@
+basePath: /api
+definitions:
+  handlers.InitializeRequest:
+    properties:
+      teams:
+        items:
+          properties:
+            logo:
+              type: string
+            name:
+              type: string
+            power:
+              maximum: 100
+              minimum: 1
+              type: integer
+          required:
+          - name
+          - power
+          type: object
+        minItems: 2
+        type: array
+    required:
+    - teams
+    type: object
+  handlers.UpdateMatchRequest:
+    properties:
+      awayScore:
+        minimum: 0
+        type: integer
+      homeScore:
+        minimum: 0
+        type: integer
+    type: object
+  models.League:
+    properties:
+      currentWeek:
+        type: integer
+      fixtures:
+        description: Fixtures grouped by week
+        items:
+          items:
+            $ref: '#/definitions/models.Match'
+          type: array
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+      predictions:
+        additionalProperties:
+          type: number
+        description: Team ID -> Win probability
+        type: object
+      teams:
+        additionalProperties:
+          $ref: '#/definitions/models.Team'
+        type: object
+      totalWeeks:
+        type: integer
+    type: object
+  models.Match:
+    properties:
+      awayScore:
+        type: integer
+      awayTeamId:
+        type: string
+      awayTeamName:
+        type: string
+      homeScore:
+        type: integer
+      homeTeamId:
+        type: string
+      homeTeamName:
+        type: string
+      id:
+        type: string
+      status:
+        $ref: '#/definitions/models.MatchStatus'
+      week:
+        type: integer
+    type: object
+  models.MatchStatus:
+    enum:
+    - not_played
+    - played
+    type: string
+    x-enum-varnames:
+    - StatusNotPlayed
+    - StatusPlayed
+  models.Prediction:
+    properties:
+      probability:
+        description: Percentage (0-100)
+        type: number
+      teamId:
+        type: string
+      teamName:
+        type: string
+    type: object
+  models.Team:
+    properties:
+      drawn:
+        description: Matches drawn
+        type: integer
+      goalsAgainst:
+        description: Goals conceded
+        type: integer
+      goalsFor:
+        description: Goals scored
+        type: integer
+      id:
+        type: string
+      logo:
+        description: Team logo URL
+        type: string
+      lost:
+        description: Matches lost
+        type: integer
+      name:
+        type: string
+      played:
+        description: Matches played
+        type: integer
+      points:
+        description: Total points
+        type: integer
+      power:
+        description: Team strength (0-100)
+        type: integer
+      won:
+        description: Matches won
+        type: integer
+    type: object
+info:
+  contact:
+    email: YunusAlpu@icloud.com
+    name: Yunus Emre Alpu
+    url: https://yunusemrealpu.netlify.app
+  title: Stadia
+  version: 1.0.0
+paths:
+  /api/league:
+    get:
+      description: Get the current state of the league including all teams and matches
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Current league state
+          schema:
+            $ref: '#/definitions/models.League'
+      summary: Get league
+      tags:
+      - league
+  /api/league/initialize:
+    post:
+      consumes:
+      - application/json
+      description: Initialize a new league with the provided teams
+      parameters:
+      - description: Teams to initialize
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.InitializeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: League initialized successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Initialize league
+      tags:
+      - league
+  /api/league/match/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update the result of a specific match
+      parameters:
+      - description: Match ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: New match scores
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateMatchRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Match updated successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request or match not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update match
+      tags:
+      - league
+  /api/league/play-all-weeks:
+    post:
+      description: Simulate all remaining weeks of matches in the league
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: All weeks played successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: League not initialized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Play all weeks
+      tags:
+      - league
+  /api/league/play-next-week:
+    post:
+      description: Simulate the next week of matches in the league
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Week played successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: All weeks already played or league not initialized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Play next week
+      tags:
+      - league
+  /api/league/predictions:
+    get:
+      description: Get championship predictions using Monte Carlo simulation
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Championship predictions
+          schema:
+            items:
+              $ref: '#/definitions/models.Prediction'
+            type: array
+      summary: Get predictions
+      tags:
+      - league
+  /api/league/reset:
+    post:
+      description: Reset the league to its initial state
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: League reset successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: League not initialized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Reset league
+      tags:
+      - league
+  /api/league/standings:
+    get:
+      description: Get the current league standings sorted by points
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: League standings
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get standings
+      tags:
+      - league
+schemes:
+- http
+- https
+swagger: "2.0"

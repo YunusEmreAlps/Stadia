@@ -1,0 +1,5 @@
+# Ignore actual config file with potentially sensitive data
+config.yaml
+
+# Keep the example file
+!config.example.yaml
