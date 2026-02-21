@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <h2>📊 League Table</h2>
+      <h2>League Table</h2>
       <span class="badge badge-info">Week {{ currentWeek }}</span>
     </div>
 
@@ -33,7 +33,17 @@
               </span>
             </td>
             <td class="team-name-cell">
-              <span class="team-logo" v-if="team.logo">{{ team.logo }}</span>
+            <div class="team-logo">
+            <img 
+              v-if="team.logo.length > 0" 
+              :src= "`https://raw.githubusercontent.com/hampusborgos/country-flags/refs/heads/main/svg/${team.logo.toLowerCase()}.svg`"
+              :alt="team.name + ' logo'"
+              width="24"
+              height="24"
+              class="team-logo-img"
+            />
+            <span v-else>{{ team.logo }}</span>
+            </div>
               <strong>{{ team.name }}</strong>
             </td>
             <td class="text-center">{{ team.played }}</td>

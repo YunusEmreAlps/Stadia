@@ -2,7 +2,7 @@
   <div class="card controls-card">
     <div class="card-header">
       <div>
-        <h2>🎮 League Controls</h2>
+        <h2>League Controls</h2>
         <p class="week-info">Week {{ currentWeek }} of {{ totalWeeks }}</p>
       </div>
     </div>

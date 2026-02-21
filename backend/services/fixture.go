@@ -59,50 +59,93 @@ func (f *FixtureService) GenerateRoundRobinFixtures(teams []*models.Team) [][]*m
 }
 
 // GenerateFixturesOptimized generates fixtures with better week distribution
-// For 4 teams: 3 matches per week in first round, 3 in second round (6 weeks total)
+// Uses the circle method (Round Robin algorithm) to create balanced fixtures
+// For n teams: (n-1) weeks in first half, (n-1) weeks in second half
+// Each week has n/2 matches played simultaneously
 func (f *FixtureService) GenerateFixturesOptimized(teams []*models.Team) [][]*models.Match {
-	if len(teams) != 4 {
-		// Fall back to round-robin for other team counts
-		return f.GenerateRoundRobinFixtures(teams)
+	n := len(teams)
+	if n < 2 {
+		return nil
+	}
+
+	// Create a copy of teams to work with
+	teamList := make([]*models.Team, n)
+	copy(teamList, teams)
+
+	// If odd number of teams, add a dummy team (bye week)
+	hasDummy := false
+	if n%2 != 0 {
+		hasDummy = true
+		teamList = append(teamList, nil) // nil represents a bye
+		n++
 	}
 
 	fixtures := make([][]*models.Match, 0)
+	week := 1
 
-	// Week 1: Team 0 vs 1, Team 2 vs 3
-	fixtures = append(fixtures, []*models.Match{
-		models.NewMatch(teams[0].ID, teams[1].ID, teams[0].Name, teams[1].Name, 1),
-		models.NewMatch(teams[2].ID, teams[3].ID, teams[2].Name, teams[3].Name, 1),
-	})
+	// Generate first half fixtures using circle method
+	// Keep first team fixed, rotate others clockwise
+	for round := 0; round < n-1; round++ {
+		weekMatches := make([]*models.Match, 0)
 
-	// Week 2: Team 0 vs 2, Team 1 vs 3
-	fixtures = append(fixtures, []*models.Match{
-		models.NewMatch(teams[0].ID, teams[2].ID, teams[0].Name, teams[2].Name, 2),
-		models.NewMatch(teams[1].ID, teams[3].ID, teams[1].Name, teams[3].Name, 2),
-	})
+		for i := 0; i < n/2; i++ {
+			home := (round + i) % (n - 1)
+			away := (n - 1 - i + round) % (n - 1)
 
-	// Week 3: Team 0 vs 3, Team 1 vs 2
-	fixtures = append(fixtures, []*models.Match{
-		models.NewMatch(teams[0].ID, teams[3].ID, teams[0].Name, teams[3].Name, 3),
-		models.NewMatch(teams[1].ID, teams[2].ID, teams[1].Name, teams[2].Name, 3),
-	})
+			// Adjust for the fixed team
+			if i == 0 {
+				away = n - 1
+			}
 
-	// Week 4: Return matches - Team 1 vs 0, Team 3 vs 2
-	fixtures = append(fixtures, []*models.Match{
-		models.NewMatch(teams[1].ID, teams[0].ID, teams[1].Name, teams[0].Name, 4),
-		models.NewMatch(teams[3].ID, teams[2].ID, teams[3].Name, teams[2].Name, 4),
-	})
+			// Skip if either team is dummy (bye week)
+			if hasDummy && (teamList[home] == nil || teamList[away] == nil) {
+				continue
+			}
 
-	// Week 5: Return matches - Team 2 vs 0, Team 3 vs 1
-	fixtures = append(fixtures, []*models.Match{
-		models.NewMatch(teams[2].ID, teams[0].ID, teams[2].Name, teams[0].Name, 5),
-		models.NewMatch(teams[3].ID, teams[1].ID, teams[3].Name, teams[1].Name, 5),
-	})
+			// Alternate home/away to balance home advantage
+			if round%2 == 0 {
+				weekMatches = append(weekMatches, models.NewMatch(
+					teamList[home].ID,
+					teamList[away].ID,
+					teamList[home].Name,
+					teamList[away].Name,
+					week,
+				))
+			} else {
+				weekMatches = append(weekMatches, models.NewMatch(
+					teamList[away].ID,
+					teamList[home].ID,
+					teamList[away].Name,
+					teamList[home].Name,
+					week,
+				))
+			}
+		}
 
-	// Week 6: Return matches - Team 3 vs 0, Team 2 vs 1
-	fixtures = append(fixtures, []*models.Match{
-		models.NewMatch(teams[3].ID, teams[0].ID, teams[3].Name, teams[0].Name, 6),
-		models.NewMatch(teams[2].ID, teams[1].ID, teams[2].Name, teams[1].Name, 6),
-	})
+		if len(weekMatches) > 0 {
+			fixtures = append(fixtures, weekMatches)
+			week++
+		}
+	}
+
+	// Generate second half fixtures (return matches)
+	firstHalfCount := len(fixtures)
+	for i := 0; i < firstHalfCount; i++ {
+		weekMatches := make([]*models.Match, 0)
+		for _, match := range fixtures[i] {
+			// Swap home and away teams
+			returnMatch := models.NewMatch(
+				match.AwayTeamID,
+				match.HomeTeamID,
+				match.AwayTeamName,
+				match.HomeTeamName,
+				week,
+			)
+			weekMatches = append(weekMatches, returnMatch)
+		}
+		fixtures = append(fixtures, weekMatches)
+		week++
+	}
 
 	return fixtures
 }

@@ -5,7 +5,7 @@
     </div>
 
     <div class="team-selection">
-      <p class="mb-2">Select teams to participate in the Champions League group stage:</p>
+      <p class="mb-2">Select teams to participate in the Champions League group stage (minimum 4 teams):</p>
       
       <div class="teams-grid">
         <div 
@@ -15,7 +15,17 @@
           :class="{ selected: isSelected(team) }"
           @click="toggleTeam(team)"
         >
-          <div class="team-logo">{{ team.logo }}</div>
+          <div class="team-logo">
+            <img 
+              v-if="team.logo.length > 0" 
+              :src= "`https://raw.githubusercontent.com/hampusborgos/country-flags/refs/heads/main/svg/${team.logo.toLowerCase()}.svg`"
+              :alt="team.name + ' logo'"
+              width="40"
+              height="40"
+              class="team-logo-img"
+            />
+            <span v-else>{{ team.logo }}</span>
+          </div>
           <div class="team-info">
             <h3>{{ team.name }}</h3>
             <div class="power-bar">
@@ -28,18 +38,21 @@
       </div>
 
       <div class="selection-info">
-        <p>Selected: {{ selectedTeams.length }} / 4 teams</p>
-        <p v-if="selectedTeams.length < 4" class="text-secondary">
-          Please select {{ 4 - selectedTeams.length }} more team(s)
+        <p>Selected: {{ selectedTeams.length }} teams</p>
+        <p v-if="selectedTeams.length < 4" class="text-warning">
+          ⚠️ Please select at least {{ 4 - selectedTeams.length }} more team(s) (minimum 4 required)
+        </p>
+        <p v-else class="text-success">
+          ✓ Ready to start! {{ selectedTeams.length }} teams selected
         </p>
       </div>
 
       <button 
         class="btn-primary btn-large"
         @click="initializeLeague"
-        :disabled="selectedTeams.length !== 4 || loading"
+        :disabled="selectedTeams.length < 4 || loading"
       >
-        {{ loading ? 'Initializing...' : 'Start League' }}
+        {{ loading ? 'Initializing...' : `Start League with ${selectedTeams.length} Teams` }}
       </button>
     </div>
   </div>
@@ -53,26 +66,26 @@ const emit = defineEmits(['initialized'])
 const leagueStore = useLeagueStore()
 
 const availableTeams = ref([
-  { name: 'Manchester City', power: 92, logo: '🏴' },
-  { name: 'Real Madrid', power: 91, logo: '🇪🇸' },
-  { name: 'Bayern Munich', power: 90, logo: '🇩🇪' },
-  { name: 'Paris Saint-Germain', power: 88, logo: '🇫🇷' },
-  { name: 'Liverpool', power: 87, logo: '🏴' },
-  { name: 'Barcelona', power: 86, logo: '🇪🇸' },
-  { name: 'Inter Milan', power: 84, logo: '🇮🇹' },
-  { name: 'Arsenal', power: 83, logo: '🏴' },
-  { name: 'Napoli', power: 82, logo: '🇮🇹' },
-  { name: 'Atletico Madrid', power: 81, logo: '🇪🇸' },
-  { name: 'Chelsea', power: 80, logo: '🏴' },
-  { name: 'Borussia Dortmund', power: 79, logo: '🇩🇪' },
-  { name: 'Ajax', power: 78, logo: '🇳🇱' },
-  { name: 'Porto', power: 77, logo: '🇵🇹' },
-  { name: 'RB Leipzig', power: 76, logo: '🇩🇪' },
-  { name: 'AC Milan', power: 75, logo: '🇮🇹' },
-  { name: 'Beşiktaş', power: 74, logo: '🇹🇷' },
-  { name: 'Celtic', power: 73, logo: '🏴' },
-  { name: 'Qarabağ', power: 70, logo: '🇦🇿' },
-  { name: 'Konyaspor', power: 68, logo: '🇹🇷' },
+  { name: 'Manchester City', power: 92, logo: 'GB-ENG' },
+  { name: 'Real Madrid', power: 91, logo: 'ES' },
+  { name: 'Bayern Munich', power: 90, logo: 'DE' },
+  { name: 'Paris Saint-Germain', power: 88, logo: 'FR' },
+  { name: 'Liverpool', power: 87, logo: 'GB-ENG' },
+  { name: 'Barcelona', power: 86, logo: 'ES' },
+  { name: 'Inter Milan', power: 84, logo: 'IT' },
+  { name: 'Arsenal', power: 83, logo: 'GB-ENG' },
+  { name: 'Napoli', power: 82, logo: 'IT' },
+  { name: 'Atletico Madrid', power: 81, logo: 'ES' },
+  { name: 'Chelsea', power: 80, logo: 'GB-ENG' },
+  { name: 'Borussia Dortmund', power: 79, logo: 'DE' },
+  { name: 'Ajax', power: 78, logo: 'NL' },
+  { name: 'Porto', power: 77, logo: 'PT' },
+  { name: 'RB Leipzig', power: 76, logo: 'DE' },
+  { name: 'AC Milan', power: 75, logo: 'IT' },
+  { name: 'Beşiktaş', power: 74, logo: 'TR' },
+  { name: 'Celtic', power: 73, logo: 'GB-SCT' },
+  { name: 'Qarabağ', power: 70, logo: 'AZ' },
+  { name: 'Konyaspor', power: 68, logo: 'TR' },
 ])
 
 const selectedTeams = ref([])
@@ -87,13 +100,13 @@ const toggleTeam = (team) => {
   
   if (index !== -1) {
     selectedTeams.value.splice(index, 1)
-  } else if (selectedTeams.value.length < 4) {
+  } else {
     selectedTeams.value.push(team)
   }
 }
 
 const initializeLeague = async () => {
-  if (selectedTeams.value.length !== 4) return
+  if (selectedTeams.value.length < 4) return
 
   loading.value = true
   try {
@@ -215,6 +228,20 @@ const initializeLeague = async () => {
 .text-secondary {
   color: var(--text-secondary);
   font-weight: normal;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.text-warning {
+  color: #f57c00;
+  font-weight: normal;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.text-success {
+  color: #4caf50;
+  font-weight: 600;
   font-size: 14px;
   margin-top: 4px;
 }

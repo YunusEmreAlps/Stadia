@@ -2,8 +2,8 @@
   <div id="app">
     <header class="app-header">
       <div class="container">
-        <h1>⚽ Stadia - League Simulation</h1>
-        <p class="subtitle">Experience the thrill of league group stage</p>
+        <h1>⚽ Stadia - Champions League Simulation</h1>
+        <p class="subtitle">Experience the thrill of the Champions League group stage</p>
       </div>
     </header>
 

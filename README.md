@@ -23,6 +23,7 @@ The name **"Stadia"** is derived from the Latin word **"stadium"** which histori
   - [API Documentation](#api-documentation)
   - [Testing](#testing)
   - [Deployment](#deployment)
+  - [Screenshots](#screenshots)
   - [Development Workflow](#development-workflow)
   - [Contributing](#contributing)
   - [License](#license)
@@ -143,6 +144,10 @@ For detailed testing instructions, please refer to the [Testing Guide](docs/TEST
 
 For detailed deployment instructions, please refer to the [Deployment Guide](docs/DEPLOYMENT.md)
 
+## Screenshots
+
+For screenshots of the application in action, please refer to the [Screenshots](docs/SS.md) document.
+
 ## Development Workflow
 
 In the **Stadia** project, we follow a structured development workflow to ensure efficient collaboration and code management. This workflow includes the following key components: branching strategy, versioning, and commit message conventions. By following these guidelines, we aim to maintain a clean and organized codebase that is easy to manage and contribute to. For more information, please refer to the [Development Workflow](docs/DEVELOPMENT_WORKFLOW.md) document.
@@ -166,8 +171,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 Thanks to the following people who have contributed to this project:
 
 - [Yunus Emre Alpu](https://www.linkedin.com/in/yunus-emre-alpu/) - Creator and Maintainer
-
----
 
 <div align="center">
     Made with ❤️ and ⚽
