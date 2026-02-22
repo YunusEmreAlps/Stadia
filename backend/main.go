@@ -53,9 +53,10 @@ func main() {
 
 	// CORS configuration
 	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{"http://localhost:5173", "http://localhost:3000", "http://localhost:8080"}
+	corsConfig.AllowOrigins = config.AppConfig.App.AllowedOrigins
 	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
 	corsConfig.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization"}
+	log.Printf("CORS enabled for origins: %v", corsConfig.AllowOrigins)
 	router.Use(cors.New(corsConfig))
 
 	// API routes

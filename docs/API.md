@@ -20,18 +20,38 @@ POST /api/league/initialize
 
 ```json
 {
-  "teams": [
-    {
-      "name": "Manchester City",
-      "power": 92,
-      "logo": "🏴󠁧󠁢󠁥󠁮󠁧󠁿"
-    },
-    {
-      "name": "Real Madrid",
-      "power": 91,
-      "logo": "🇪🇸"
-    }
-  ]
+    "teams": [
+        {
+            "name": "Manchester City",
+            "power": 92,
+            "logo": "GB-ENG"
+        },
+        {
+            "name": "Bayern Munich",
+            "power": 90,
+            "logo": "DE"
+        },
+        {
+            "name": "Barcelona",
+            "power": 86,
+            "logo": "ES"
+        },
+        {
+            "name": "Liverpool",
+            "power": 87,
+            "logo": "GB-ENG"
+        },
+        {
+            "name": "Real Madrid",
+            "power": 91,
+            "logo": "ES"
+        },
+        {
+            "name": "Paris Saint-Germain",
+            "power": 88,
+            "logo": "FR"
+        }
+    ]
 }
 ```
 

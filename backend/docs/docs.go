@@ -19,7 +19,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/league": {
+        "/league": {
             "get": {
                 "description": "Get the current state of the league including all teams and matches",
                 "produces": [
@@ -39,7 +39,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/league/initialize": {
+        "/league/initialize": {
             "post": {
                 "description": "Initialize a new league with the provided teams",
                 "consumes": [
@@ -92,7 +92,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/league/match/{id}": {
+        "/league/match/{id}": {
             "put": {
                 "description": "Update the result of a specific match",
                 "consumes": [
@@ -143,7 +143,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/league/play-all-weeks": {
+        "/league/play-all-weeks": {
             "post": {
                 "description": "Simulate all remaining weeks of matches in the league",
                 "produces": [
@@ -173,7 +173,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/league/play-next-week": {
+        "/league/play-next-week": {
             "post": {
                 "description": "Simulate the next week of matches in the league",
                 "produces": [
@@ -203,7 +203,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/league/predictions": {
+        "/league/predictions": {
             "get": {
                 "description": "Get championship predictions using Monte Carlo simulation",
                 "produces": [
@@ -226,7 +226,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/league/reset": {
+        "/league/reset": {
             "post": {
                 "description": "Reset the league to its initial state",
                 "produces": [
@@ -256,7 +256,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/league/standings": {
+        "/league/standings": {
             "get": {
                 "description": "Get the current league standings sorted by points",
                 "produces": [

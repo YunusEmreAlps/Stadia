@@ -45,7 +45,7 @@ type UpdateMatchRequest struct {
 // @Success 200 {object} map[string]interface{} "League initialized successfully"
 // @Failure 400 {object} map[string]string "Invalid request"
 // @Failure 500 {object} map[string]string "Internal server error"
-// @Router /api/league/initialize [post]
+// @Router /league/initialize [post]
 func (h *LeagueHandler) Initialize(c *gin.Context) {
 	var req InitializeRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -76,7 +76,7 @@ func (h *LeagueHandler) Initialize(c *gin.Context) {
 // @Tags league
 // @Produce json
 // @Success 200 {object} models.League "Current league state"
-// @Router /api/league [get]
+// @Router /league [get]
 func (h *LeagueHandler) GetLeague(c *gin.Context) {
 	league := h.leagueService.GetLeague()
 	c.JSON(http.StatusOK, league)
@@ -88,7 +88,7 @@ func (h *LeagueHandler) GetLeague(c *gin.Context) {
 // @Tags league
 // @Produce json
 // @Success 200 {object} map[string]interface{} "League standings"
-// @Router /api/league/standings [get]
+// @Router /league/standings [get]
 func (h *LeagueHandler) GetStandings(c *gin.Context) {
 	standings := h.leagueService.GetStandings()
 	c.JSON(http.StatusOK, gin.H{"standings": standings})
@@ -101,7 +101,7 @@ func (h *LeagueHandler) GetStandings(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} map[string]interface{} "Week played successfully"
 // @Failure 400 {object} map[string]string "All weeks already played or league not initialized"
-// @Router /api/league/play-next-week [post]
+// @Router /league/play-next-week [post]
 func (h *LeagueHandler) PlayNextWeek(c *gin.Context) {
 	err := h.leagueService.PlayNextWeek()
 	if err != nil {
@@ -122,7 +122,7 @@ func (h *LeagueHandler) PlayNextWeek(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} map[string]interface{} "All weeks played successfully"
 // @Failure 400 {object} map[string]string "League not initialized"
-// @Router /api/league/play-all-weeks [post]
+// @Router /league/play-all-weeks [post]
 func (h *LeagueHandler) PlayAllWeeks(c *gin.Context) {
 	err := h.leagueService.PlayAllWeeks()
 	if err != nil {
@@ -146,7 +146,7 @@ func (h *LeagueHandler) PlayAllWeeks(c *gin.Context) {
 // @Param request body UpdateMatchRequest true "New match scores"
 // @Success 200 {object} map[string]interface{} "Match updated successfully"
 // @Failure 400 {object} map[string]string "Invalid request or match not found"
-// @Router /api/league/match/{id} [put]
+// @Router /league/match/{id} [put]
 func (h *LeagueHandler) UpdateMatch(c *gin.Context) {
 	matchID := c.Param("id")
 
@@ -175,7 +175,7 @@ func (h *LeagueHandler) UpdateMatch(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} map[string]interface{} "League reset successfully"
 // @Failure 400 {object} map[string]string "League not initialized"
-// @Router /api/league/reset [post]
+// @Router /league/reset [post]
 func (h *LeagueHandler) ResetLeague(c *gin.Context) {
 	err := h.leagueService.ResetLeague()
 	if err != nil {
@@ -195,7 +195,7 @@ func (h *LeagueHandler) ResetLeague(c *gin.Context) {
 // @Tags league
 // @Produce json
 // @Success 200 {object} []models.Prediction "Championship predictions"
-// @Router /api/league/predictions [get]
+// @Router /league/predictions [get]
 func (h *LeagueHandler) GetPredictions(c *gin.Context) {
 	predictions := h.leagueService.GetPredictions()
 	c.JSON(http.StatusOK, predictions)

@@ -139,7 +139,7 @@ info:
   title: Stadia
   version: 1.0.0
 paths:
-  /api/league:
+  /league:
     get:
       description: Get the current state of the league including all teams and matches
       produces:
@@ -152,7 +152,7 @@ paths:
       summary: Get league
       tags:
       - league
-  /api/league/initialize:
+  /league/initialize:
     post:
       consumes:
       - application/json
@@ -187,7 +187,7 @@ paths:
       summary: Initialize league
       tags:
       - league
-  /api/league/match/{id}:
+  /league/match/{id}:
     put:
       consumes:
       - application/json
@@ -221,7 +221,7 @@ paths:
       summary: Update match
       tags:
       - league
-  /api/league/play-all-weeks:
+  /league/play-all-weeks:
     post:
       description: Simulate all remaining weeks of matches in the league
       produces:
@@ -241,7 +241,7 @@ paths:
       summary: Play all weeks
       tags:
       - league
-  /api/league/play-next-week:
+  /league/play-next-week:
     post:
       description: Simulate the next week of matches in the league
       produces:
@@ -261,7 +261,7 @@ paths:
       summary: Play next week
       tags:
       - league
-  /api/league/predictions:
+  /league/predictions:
     get:
       description: Get championship predictions using Monte Carlo simulation
       produces:
@@ -276,7 +276,7 @@ paths:
       summary: Get predictions
       tags:
       - league
-  /api/league/reset:
+  /league/reset:
     post:
       description: Reset the league to its initial state
       produces:
@@ -296,7 +296,7 @@ paths:
       summary: Reset league
       tags:
       - league
-  /api/league/standings:
+  /league/standings:
     get:
       description: Get the current league standings sorted by points
       produces:

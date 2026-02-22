@@ -16,10 +16,11 @@ type Config struct {
 
 // App contains application-specific configuration
 type App struct {
-	Mode    string `mapstructure:"mode"`
-	Port    string `mapstructure:"port"`
-	Version string `mapstructure:"version"`
-	Name    string `mapstructure:"name"`
+	Mode           string   `mapstructure:"mode"`
+	Port           string   `mapstructure:"port"`
+	Version        string   `mapstructure:"version"`
+	Name           string   `mapstructure:"name"`
+	AllowedOrigins []string `mapstructure:"allowed_origins"`
 }
 
 // DB contains database configuration
@@ -42,6 +43,7 @@ func Load(processCwdir string) error {
 	viper.SetDefault("app.port", "8000")
 	viper.SetDefault("app.version", "1.0.0")
 	viper.SetDefault("app.name", "stadia-backend")
+	viper.SetDefault("app.allowed_origins", []string{"http://localhost", "http://localhost:8080", "http://localhost:5173", "http://localhost:3000", "https://stadiaa.netlify.app", "https://stadia-xex6.onrender.com"})
 
 	// Read environment variables
 	viper.AutomaticEnv()
