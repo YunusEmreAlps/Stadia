@@ -1,11 +1,11 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <h2>⚙️ Initialize League</h2>
+      <h2>Initialize League</h2>
     </div>
 
     <div class="team-selection">
-      <p class="mb-2">Select teams to participate in the Champions League group stage (minimum 4 teams):</p>
+      <p class="mb-2">Select teams to participate in the Champions League group stage <b>(minimum {{ MIN_TEAMS }} teams)</b>:</p>
       
       <div class="teams-grid">
         <div 
@@ -18,7 +18,7 @@
           <div class="team-logo">
             <img 
               v-if="team.logo.length > 0" 
-              :src= "`https://raw.githubusercontent.com/hampusborgos/country-flags/refs/heads/main/svg/${team.logo.toLowerCase()}.svg`"
+              :src="`${FLAG_BASE_URL}/${team.logo.toLowerCase()}.svg`"
               :alt="team.name + ' logo'"
               width="40"
               height="40"
@@ -39,8 +39,8 @@
 
       <div class="selection-info">
         <p>Selected: {{ selectedTeams.length }} teams</p>
-        <p v-if="selectedTeams.length < 4" class="text-warning">
-          ⚠️ Please select at least {{ 4 - selectedTeams.length }} more team(s) (minimum 4 required)
+        <p v-if="selectedTeams.length < MIN_TEAMS" class="text-warning">
+          ⚠️ Please select at least {{ MIN_TEAMS - selectedTeams.length }} more team(s) (minimum {{ MIN_TEAMS }} required)
         </p>
         <p v-else class="text-success">
           ✓ Ready to start! {{ selectedTeams.length }} teams selected
@@ -50,7 +50,7 @@
       <button 
         class="btn-primary btn-large"
         @click="initializeLeague"
-        :disabled="selectedTeams.length < 4 || loading"
+        :disabled="selectedTeams.length < MIN_TEAMS || loading"
       >
         {{ loading ? 'Initializing...' : `Start League with ${selectedTeams.length} Teams` }}
       </button>
@@ -61,33 +61,12 @@
 <script setup>
 import { ref } from 'vue'
 import { useLeagueStore } from '@/stores/league'
+import { AVAILABLE_TEAMS, MIN_TEAMS, FLAG_BASE_URL } from '@/constants/teams'
 
 const emit = defineEmits(['initialized'])
 const leagueStore = useLeagueStore()
 
-const availableTeams = ref([
-  { name: 'Manchester City', power: 92, logo: 'GB-ENG' },
-  { name: 'Real Madrid', power: 91, logo: 'ES' },
-  { name: 'Bayern Munich', power: 90, logo: 'DE' },
-  { name: 'Paris Saint-Germain', power: 88, logo: 'FR' },
-  { name: 'Liverpool', power: 87, logo: 'GB-ENG' },
-  { name: 'Barcelona', power: 86, logo: 'ES' },
-  { name: 'Inter Milan', power: 84, logo: 'IT' },
-  { name: 'Arsenal', power: 83, logo: 'GB-ENG' },
-  { name: 'Napoli', power: 82, logo: 'IT' },
-  { name: 'Atletico Madrid', power: 81, logo: 'ES' },
-  { name: 'Chelsea', power: 80, logo: 'GB-ENG' },
-  { name: 'Borussia Dortmund', power: 79, logo: 'DE' },
-  { name: 'Ajax', power: 78, logo: 'NL' },
-  { name: 'Porto', power: 77, logo: 'PT' },
-  { name: 'RB Leipzig', power: 76, logo: 'DE' },
-  { name: 'AC Milan', power: 75, logo: 'IT' },
-  { name: 'Beşiktaş', power: 74, logo: 'TR' },
-  { name: 'Celtic', power: 73, logo: 'GB-SCT' },
-  { name: 'Qarabağ', power: 70, logo: 'AZ' },
-  { name: 'Konyaspor', power: 68, logo: 'TR' },
-])
-
+const availableTeams = ref(AVAILABLE_TEAMS)
 const selectedTeams = ref([])
 const loading = ref(false)
 
@@ -106,7 +85,7 @@ const toggleTeam = (team) => {
 }
 
 const initializeLeague = async () => {
-  if (selectedTeams.value.length < 4) return
+  if (selectedTeams.value.length < MIN_TEAMS) return
 
   loading.value = true
   try {

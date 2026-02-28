@@ -2,7 +2,7 @@
   <div id="app">
     <header class="app-header">
       <div class="container">
-        <h1>⚽ Stadia - Champions League Simulation</h1>
+        <h1>Stadia - Champions League Simulation</h1>
         <p class="subtitle">Experience the thrill of the Champions League group stage</p>
       </div>
     </header>
@@ -50,7 +50,7 @@ onMounted(() => {
 
 <style scoped>
 .app-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #11998e 0%, #1a7a5e 50%, #38ef7d 100%);
   color: white;
   padding: 40px 0;
   margin-bottom: 30px;

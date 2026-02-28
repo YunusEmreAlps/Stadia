@@ -1,7 +1,7 @@
 <template>
   <div class="card predictions-card">
     <div class="card-header">
-      <h2>🔮 Championship Predictions</h2>
+      <h2>Championship Predictions</h2>
       <span class="badge badge-warning">Week {{ predictions?.week }}</span>
     </div>
 
@@ -40,7 +40,7 @@
 
     <div class="prediction-info">
       <p>
-        💡 Predictions are calculated using Monte Carlo simulation with 10,000 iterations, 
+        Predictions are calculated using Monte Carlo simulation with 10,000 iterations, 
         considering current points, goal difference, remaining fixtures, and team strength.
       </p>
     </div>
@@ -73,8 +73,11 @@ const getBarClass = (prob) => {
 
 <style scoped>
 .predictions-card {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #11998e 0%, #1a7a5e 50%, #38ef7d 100%);
   color: white;
+  box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+  position: relative;
+  overflow: hidden;
 }
 
 .card-header h2 {
