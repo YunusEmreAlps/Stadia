@@ -28,9 +28,19 @@
           </div>
           <div class="team-info">
             <h3>{{ team.name }}</h3>
-            <div class="power-bar">
-              <div class="power-fill" :style="{ width: team.power + '%' }"></div>
-              <span class="power-label">Power: {{ team.power }}</span>
+            <div class="power-control">
+              <div class="power-bar">
+                <div class="power-fill" :style="{ width: team.power + '%' }"></div>
+                <span class="power-label">Power: {{ team.power }}</span>
+              </div>
+              <input 
+                type="range" 
+                min="0" 
+                max="100" 
+                v-model.number="team.power"
+                class="power-slider"
+                @click.stop
+              />
             </div>
           </div>
           <div class="check-icon" v-if="isSelected(team)">✓</div>
@@ -66,7 +76,8 @@ import { AVAILABLE_TEAMS, MIN_TEAMS, FLAG_BASE_URL } from '@/constants/teams'
 const emit = defineEmits(['initialized'])
 const leagueStore = useLeagueStore()
 
-const availableTeams = ref(AVAILABLE_TEAMS)
+// Create a deep copy of teams so we can modify power values
+const availableTeams = ref(AVAILABLE_TEAMS.map(team => ({ ...team })))
 const selectedTeams = ref([])
 const loading = ref(false)
 
@@ -153,12 +164,63 @@ const initializeLeague = async () => {
   text-overflow: ellipsis;
 }
 
+.power-control {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .power-bar {
   position: relative;
   height: 24px;
   background-color: #e0e0e0;
   border-radius: 12px;
   overflow: hidden;
+}
+
+.power-slider {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: linear-gradient(90deg, #ff9800, #4caf50);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+
+.power-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--primary-color);
+  border: 2px solid white;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+}
+
+.power-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+}
+
+.power-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: var(--primary-color);
+  border: 2px solid white;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+}
+
+.power-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
 }
 
 .power-fill {
